@@ -1,12 +1,38 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
 import HomeView from '../views/HomeView.vue'
+import index from '../views/index.vue'
+import AboutView from '../views/AboutView.vue'
+import Topic from '../views/Topic.vue'
+
+
 
 const routes = [
   {
     path: '/',
-    name: 'home',
+    name: 'Home',
     component: HomeView
   },
+
+  {
+    path: '/Home',
+    name: 'HomeView',
+    component: HomeView
+  },
+
+  {
+    path: '/Home/topic/:topicId',
+    name: 'Topic',
+    component: Topic,
+    props: true,
+  },
+
+  {
+    path: '/acc',
+    name: 'acc',
+    component: index
+  },
+
   {
     path: '/about',
     name: 'about',
