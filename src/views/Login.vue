@@ -1,95 +1,55 @@
-<template> 
+<template>
+  <v-sheet width="300" class="mx-auto">
+    <v-form fast-fail @submit.prevent="login">
+      <div v-if="message === 'error'">Invalid response</div>
 
-  <v-sheet width="300" class="mx-auto"> 
+      <v-text-field v-model="username" label="Username"></v-text-field>
 
-    <v-form fast-fail @submit.prevent="login"> 
+      <v-text-field v-model="password" label="Password" type="password"></v-text-field>
 
-      <div v-if="message === 'error'">invalid response</div> 
+      <v-btn type="submit" block class="mt-2">Submit</v-btn>
 
-       
+      <router-link to="/Student/Register">Register</router-link>
+    </v-form>
+  </v-sheet>
+</template>
 
-      <v-text-field 
+<script>
+import router from '@/router';
+import axios from 'axios';
 
-        v-model="username" 
+export default {
+  data() {
+    return {
+      username: '',
+      password: '',
+      message: [],
+    };
+  },
+  methods: {
+    async login() {
+      try {
+        const response = await axios.post('login', {
+          username: this.username,
+          password: this.password,
+        });
 
-        label="Username" 
+        if (response.data.msg === 'okay' && response.data.student_id) {
+          // Store student_id in local storage
+          localStorage.setItem('student_id', response.data.student_id);
 
-      ></v-text-field> 
+          // Log the stored student_id for verification
+          console.log('Stored student_id:', localStorage.getItem('student_id'));
 
- 
-
-      <v-text-field 
-
-        v-model="password" 
-
-        label="Password" 
-
-        type="password" 
-
-      ></v-text-field> 
-
- 
-
-      <v-btn type="submit" block class="mt-2">Submit</v-btn> 
-
-      <router-link to="/register">register</router-link> 
-
-    </v-form> 
-
-  </v-sheet> 
-
-</template> 
-
-<script> 
-
-import router from '@/router'; 
-
-import axios from 'axios'; 
-
-  export default { 
-
-    data(){ 
-
-      return { 
-
-          username: '', 
-
-          password: '', 
-
-          message: [], 
-
-      } 
-
-    }, 
-
-    methods:{ 
-
-      async login(){ 
-
-          const data = await axios.post("login",{ 
-
-            username: this.username, 
-
-            password: this.password 
-
-          }); 
-
-           
-
-          if(data.data.msg ==='okay'){ 
-
-            
-
-            router.push('/Student/Home'); 
-
-          } 
-
-           
-
-      } 
-
-  } 
-
-  } 
-
-</script> 
+          // Redirect to student home page
+          router.push('/Student/Home');
+        } else {
+          console.error('Invalid response from the server:', response.data);
+        }
+      } catch (error) {
+        console.error('Error during login request:', error);
+      }
+    },
+  },
+};
+</script>

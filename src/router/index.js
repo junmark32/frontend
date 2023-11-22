@@ -98,11 +98,11 @@ const routes = [
 
   
 
-  // {
-  //   path: '/acc',
-  //   name: 'acc',
-  //   component: index
-  // },
+  {
+    path: '/acc',
+    name: 'acc',
+    component: index
+  },
 
   // {
   //   path: '/about',
