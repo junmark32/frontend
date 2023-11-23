@@ -4,6 +4,8 @@ import HomeView from '../views/HomeView.vue'
 import index from '../views/index.vue'
 import AboutView from '../views/AboutView.vue'
 import Topic from '../views/Topic.vue'
+import EventList from './view/EventList.vue';
+import AddEvent from './view/AddEvent.vue';
 
 //user
 import Login from '../views/Login.vue'
@@ -13,13 +15,17 @@ import AdminRegister from '../views/AdminRegister.vue'
 import AdminLogin from '../views/AdminLogin.vue'
 import AdminPanel from '../views/AdminPanel.vue'
 
+
 //teacher
 import TeacherLogin from '../views/TeacherLogin.vue'
 import TeacherRegister from '../views/TeacherRegister.vue'
 import TeacherPanel from '../views/TeacherPanel.vue'
 
 
+
 const routes = [
+  { path: '/', view: EventList },
+  { path: '/add-event', view: AddEvent },
   // {
   //   path: '/',
   //   name: 'Home',
