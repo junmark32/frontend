@@ -16,7 +16,7 @@
       <v-btn type="submit" block class="mt-2">Submit</v-btn>
 
       <!-- Link to login page -->
-      <router-link to="/login">Login</router-link>
+      <router-link to="/Student/Login">Login</router-link>
     </v-form>
   </v-sheet>
 </template>

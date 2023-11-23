@@ -363,6 +363,14 @@ export default {
     this.getSubjects();
     this.getTopics();
     this.getDiscuss();
+    const studentId = localStorage.getItem('student_id');
+
+    if (studentId) {
+        // If studentId is available, fetch subjects based on it
+        this.getSubjectsByStudentId(studentId);
+    } else {
+        console.error('StudentId not found in local storage.');
+    }
   },
   methods: {
     async getSubjects() {
@@ -392,9 +400,42 @@ export default {
       }
     },
 
+    async getSubjectsByStudentId(studentId) {
+      try {
+        const response = await axios.get(`getSubjectsByStudentId/${studentId}`);
+        this.subjects = response.data;
+      } catch (error) {
+        console.error('Error fetching subjects by studentId:', error);
+      }
+    },
+
     getTopicsBySubject(subject) {
       // Filter topics based on the subject
       return this.topics.filter((topic) => topic.subject_id === subject.subject_id);
+    },
+
+
+
+    // Handle the navigation logic based on the route
+    handleNavigation() {
+      const currentRoute = this.$route;
+      if (currentRoute.path.includes('/Home/subject/')) {
+        // If the route contains '/Home/subject/', fetch subjects
+        this.getSubjects();
+      } else if (currentRoute.path.includes('/Home/topic/')) {
+        // If the route contains '/Home/topic/', fetch topics
+        this.getTopics();
+      } else {
+        // Default behavior, fetch subjects
+        this.getSubjects();
+      }
+    },
+  },
+
+  watch: {
+    // Watch for changes in the route and handle navigation accordingly
+    $route(to, from) {
+      this.handleNavigation();
     },
   },
 
