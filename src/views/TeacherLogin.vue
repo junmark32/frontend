@@ -8,7 +8,7 @@
   
         <v-btn type="submit" block class="mt-2">Submit</v-btn>
   
-        <router-link to="/register">Register</router-link>
+        <router-link to="/Teacher/Register">Register</router-link>
       </v-form>
     </v-sheet>
   </template>
@@ -26,22 +26,27 @@
       };
     },
     methods: {
-      async login() {
+        async login() {
         try {
           const response = await axios.post('teacher/login', {
             username: this.username,
             password: this.password,
           });
-  
-          this.message = response.data.msg; // Corrected this line
-  
-          if (response.data.msg === 'okay') {
-            sessionStorage.setItem('token', response.data.token); // Corrected this line
+
+          if (response.data.msg === 'okay' && response.data.teacher_id) {
+            // Store student_id in local storage
+            localStorage.setItem('teacher_id', response.data.teacher_id);
+
+            // Log the stored student_id for verification
+            console.log('Stored teacher_id:', localStorage.getItem('teacher_id'));
+
+            // Redirect to student home page
             router.push('/Teacher/Home');
+          } else {
+            console.error('Invalid response from the server:', response.data);
           }
         } catch (error) {
-          console.error('Login failed:', error);
-          this.message = 'error';
+          console.error('Error during login request:', error);
         }
       },
     },

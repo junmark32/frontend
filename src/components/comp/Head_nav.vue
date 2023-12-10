@@ -171,12 +171,12 @@
 
       <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
         <img :src="require('@/assets/img/profile-img.jpg')" alt="Profile" class="rounded-circle">
-        <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
+        <span class="d-none d-md-block dropdown-toggle ps-2">{{student.username}}</span>
       </a><!-- End Profile Iamge Icon -->
 
       <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
         <li class="dropdown-header">
-          <h6>Kevin Anderson</h6>
+          <h6>{{student.username}}</h6>
           <span>Web Designer</span>
         </li>
         <li>
@@ -236,7 +236,7 @@
 <ul class="sidebar-nav" id="sidebar-nav">
 
   <li class="nav-item">
-    <router-link to="/Home" class="nav-link ">
+    <router-link to="/Student/Home" class="nav-link ">
       <i class="bi bi-grid"></i>
       <span>Home</span>
     </router-link>
@@ -343,6 +343,8 @@ export default {
       subjects: [],
       topics: [],
       discuss: [],
+      student: [],
+      studentId: null, // Add studentId to the data
     };
   },
   created() {
@@ -359,28 +361,43 @@ export default {
     console.log(Main);
 
 
+    // Fetch the student_id from local storage
+    this.studentId = localStorage.getItem('student_id');
+    // this.handleNavigation();
 
-    this.getSubjects();
+    this.getSubjectsByStudentId();
+    this.getStudentData();
     this.getTopics();
     this.getDiscuss();
-    const studentId = localStorage.getItem('student_id');
-
-    if (studentId) {
-        // If studentId is available, fetch subjects based on it
-        this.getSubjectsByStudentId(studentId);
-    } else {
-        console.error('StudentId not found in local storage.');
-    }
+    
   },
   methods: {
-    async getSubjects() {
+    async getSubjectsByStudentId() {
       try {
-        const response = await axios.get('getSubject');
+        const response = await axios.get(`getSubjectsByStudentId/${this.studentId}`);
         this.subjects = response.data;
       } catch (error) {
-        console.error('Error fetching subjects:', error);
+        console.error('Error fetching subjects by studentId:', error);
       }
     },
+
+    async getStudentData() {
+      try {
+        const response = await axios.get(`getStudentData/${this.studentId}`);
+        this.student = { username: response.data[0].username };
+      } catch (error) {
+        console.error('Error fetching Student Data:', error);
+      }
+    },
+
+    // async getSubjects() {
+    //   try {
+    //     const response = await axios.get('getSubject');
+    //     this.subjects = response.data;
+    //   } catch (error) {
+    //     console.error('Error fetching subjects:', error);
+    //   }
+    // },
 
     async getTopics() {
       try {
@@ -400,14 +417,7 @@ export default {
       }
     },
 
-    async getSubjectsByStudentId(studentId) {
-      try {
-        const response = await axios.get(`getSubjectsByStudentId/${studentId}`);
-        this.subjects = response.data;
-      } catch (error) {
-        console.error('Error fetching subjects by studentId:', error);
-      }
-    },
+
 
     getTopicsBySubject(subject) {
       // Filter topics based on the subject
@@ -417,17 +427,13 @@ export default {
 
 
     // Handle the navigation logic based on the route
-    handleNavigation() {
-      const currentRoute = this.$route;
-      if (currentRoute.path.includes('/Home/subject/')) {
-        // If the route contains '/Home/subject/', fetch subjects
-        this.getSubjects();
-      } else if (currentRoute.path.includes('/Home/topic/')) {
-        // If the route contains '/Home/topic/', fetch topics
+    async handleNavigation(route) {
+      if (route.path.includes('/Home/subject/')) {
+        this.getSubjectsByStudentId();
+      } else if (route.path.includes('/Home/topic/')) {
         this.getTopics();
       } else {
-        // Default behavior, fetch subjects
-        this.getSubjects();
+        this.getSubjectsByStudentId();
       }
     },
   },
@@ -435,7 +441,7 @@ export default {
   watch: {
     // Watch for changes in the route and handle navigation accordingly
     $route(to, from) {
-      this.handleNavigation();
+      this.handleNavigation(to);
     },
   },
 

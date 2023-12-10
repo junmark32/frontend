@@ -38,6 +38,7 @@ export default {
           // Store student_id in local storage
           localStorage.setItem('student_id', response.data.student_id);
 
+
           // Log the stored student_id for verification
           console.log('Stored student_id:', localStorage.getItem('student_id'));
 

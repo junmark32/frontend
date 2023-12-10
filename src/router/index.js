@@ -53,7 +53,7 @@ const routes = [
     path: '/Admin/Home',
     name: 'AdminPanel',
     component: AdminPanel,
-    meta: { requiresAuth: true }, // Add this meta field for routes that require authentication
+    // meta: { requiresAuth: true }, // Add this meta field for routes that require authentication
   },
 
   {
