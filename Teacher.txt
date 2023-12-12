@@ -1,0 +1,302 @@
+//teacher panel:
+<template>
+  <div class="container mt-4">
+    <div>
+      <h6>{{teacher.username}}</h6>
+      <h2>Add Subject</h2>
+      <form @submit.prevent="addSubject">
+        <div class="mb-3">
+          <label for="subjectName" class="form-label">Subject Name:</label>
+          <input v-model="subjectName" required class="form-control" id="subjectName" />
+        </div>
+        <div class="mb-3">
+          <label for="courseName" class="form-label">Course Name:</label>
+          <select v-model="courseName" required class="form-select" id="courseName">
+            <option v-for="course in courses" :key="course.course_id">{{ course.course_name }}</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Subject</button>
+      </form>
+
+      <h2 class="mt-4">Add Topic</h2>
+      <form @submit.prevent="addTopic">
+        <div class="mb-3">
+          <label for="topicName" class="form-label">Topic Name:</label>
+          <input v-model="topicName" required class="form-control" id="topicName" />
+        </div>
+        <div class="mb-3">
+          <label for="subjectNameForTopic" class="form-label">Subject Name:</label>
+          <select v-model="subjectNameForTopic" required class="form-select" id="subjectNameForTopic">
+            <option v-for="subject in subjects" :key="subject.subject_id">{{ subject.subject_name }}</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Topic</button>
+      </form>
+
+      <h2 class="mt-4">Add Discussion</h2>
+      <form @submit.prevent="addDiscussion">
+        <div class="mb-3">
+          <label for="contentType" class="form-label">Content Type:</label>
+          <input v-model="contentType" required class="form-control" id="contentType" />
+        </div>
+        <div class="mb-3">
+          <label for="contentTitle" class="form-label">Content Title:</label>
+          <input v-model="contentTitle" required class="form-control" id="contentTitle" />
+        </div>
+        <div class="mb-3">
+          <label for="contentData" class="form-label">Content Data:</label>
+          <input v-model="contentData" required class="form-control" id="contentData" />
+        </div>
+        <div class="mb-3">
+          <label for="contentLink" class="form-label">Content Link:</label>
+          <input
+            v-model="contentLink"
+            required
+            class="form-control"
+            id="contentLink"
+            placeholder="Enter a valid link"
+            pattern="https?://.+"
+            title="Please enter a valid URL starting with 'http://' or 'https://'"
+          />
+          
+        </div>
+        <div class="mb-3">
+          <label for="topicNameForDiscussion" class="form-label">Topic Name:</label>
+          <select v-model="topicNameForDiscussion" required class="form-select" id="topicNameForDiscussion">
+            <option v-for="topic in topics" :key="topic.topic_id">{{ topic.topic_name }}</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Discussion</button>
+      </form>
+    </div>
+  </div>
+</template>
+
+<!-- ... (rest of your component) -->
+
+  
+  <script>
+import axios from 'axios';
+
+
+  export default {
+    data() {
+      return {
+        subjectName: "",
+        courseName: "",
+        topicName: "",
+        subjectNameForTopic: "",
+        contentType: "",
+        contentTitle: "",
+        contentData: "",
+        contentLink: "",
+        topicNameForDiscussion: "",
+        courses: [], // Array to store existing courses
+        subjects: [], // Array to store existing subjects
+        topics: [], // Array to store existing topics
+        teacher: [],
+        teacherId: null,
+        
+      };
+    },
+    created() {
+      this.teacherId = localStorage.getItem('teacher_id');
+      // Fetch existing courses, subjects, and topics when the component is created
+      this.getCourseByTeacherId();
+      this.getSubjectsByTeacherId();
+      this.getTopicsByTeacherId();
+      this.getTeacherData();
+      // this.fetchSubjects();
+      // this.fetchTopics();
+    },
+    methods: {
+      // Function to fetch existing courses
+      // fetchCourses() {
+      //   axios.get("teacher/getCourseByTeacherId/${this.teacherId}") // Replace with your actual API endpoint
+      //     .then(response => {
+      //       this.courses = response.data;
+      //     })
+      //     .catch(error => {
+      //       console.error(error);
+      //     });
+      // },
+      async getTeacherData() {
+        try {
+          const response = await axios.get(`getTeacherData/${this.teacherId}`);
+          this.teacher = { username: response.data[0].username };
+        } catch (error) {
+          console.error('Error fetching Teacher Data:', error);
+        }
+      },
+
+      async getCourseByTeacherId() {
+      try {
+        const response = await axios.get(`teacher/getCourseByTeacherId/${this.teacherId}`);
+        this.courses = response.data;
+        // this.subjects = response.data;
+        // this.topics = response.data;
+        
+      } catch (error) {
+        console.error('Error fetching subjects by studentId:', error);
+      }
+    },
+
+    async getSubjectsByTeacherId() {
+      try {
+        const response = await axios.get(`teacher/getSubjectsByTeacherId/${this.teacherId}`);
+        
+        this.subjects = response.data;
+        
+        
+      } catch (error) {
+        console.error('Error fetching subjects by studentId:', error);
+      }
+    },
+
+    async getTopicsByTeacherId() {
+      try {
+        const response = await axios.get(`teacher/getTopicsByTeacherId/${this.teacherId}`);
+        
+        this.topics = response.data;
+        
+        
+      } catch (error) {
+        console.error('Error fetching subjects by studentId:', error);
+      }
+    },
+      // // Function to fetch existing subjects
+      // fetchSubjects() {
+      //   axios.get("teacher/subjects") // Replace with your actual API endpoint
+      //     .then(response => {
+      //       this.subjects = response.data;
+      //     })
+      //     .catch(error => {
+      //       console.error(error);
+      //     });
+      // },
+      // // Function to fetch existing topics
+      // fetchTopics() {
+      //   axios.get("teacher/topics") // Replace with your actual API endpoint
+      //     .then(response => {
+      //       this.topics = response.data;
+      //     })
+      //     .catch(error => {
+      //       console.error(error);
+      //     });
+      // },
+      addSubject() {
+        // Make API request to add subject
+        // Example using axios:
+        axios.post("teacher/addSubject", {
+          subject_name: this.subjectName,
+          course_name: this.courseName,
+        })
+        .then(response => {
+          console.log(response.data);
+          window.location.reload();
+        })
+        .catch(error => {
+          console.error(error);
+        });
+      },
+      addTopic() {
+        // Make API request to add topic
+        // Example using axios:
+        axios.post("teacher/addTopic", {
+          topic_name: this.topicName,
+          subject_name: this.subjectNameForTopic,
+        })
+        .then(response => {
+          console.log(response.data);
+          window.location.reload();
+        })
+        .catch(error => {
+          console.error(error);
+        });
+      },
+      addDiscussion() {
+        // Make API request to add discussion
+        // Example using axios:
+        axios.post("teacher/addDiscussion", {
+          content_type: this.contentType,
+          content_title: this.contentTitle,
+          content_data: this.contentData,
+          content_link: this.contentLink,
+          topic_name: this.topicNameForDiscussion,
+        })
+        .then(response => {
+          console.log(response.data);
+          window.location.reload();
+        })
+        .catch(error => {
+          console.error(error);
+        });
+      },
+    },
+  };
+  </script>
+  
+  <style scoped>
+  /* Add your component-specific styles here */
+  form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  h2 {
+    color: #3498db;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    color: #555;
+  }
+
+  input,
+  select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border-color 0.3s ease-in-out;
+  }
+
+  input:focus,
+  select:focus {
+    border-color: #3498db;
+    outline: none;
+  }
+
+  button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #3498db;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+
+  button:hover {
+    background-color: #2980b9;
+  }
+
+  .mb-3 {
+    margin-bottom: 20px;
+  }
+</style>
+
+  

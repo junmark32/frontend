@@ -1,18 +1,19 @@
 <template>
   <div>
+  
     <!-- Insert Course Section -->
     <h2>Insert Course</h2>
 
     <form @submit.prevent="insertCourse">
-      <div>
-        <label for="courseName">Course Name:</label>
-        <input type="text" v-model="courseName" required>
+      <div class="mb-3">
+        <label for="courseName" class="form-label">Course Name:</label>
+        <input type="text" class="form-control" v-model="courseName" required>
       </div>
 
       <!-- Add more fields as needed -->
 
-      <div>
-        <button type="submit">Insert Course</button>
+      <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Insert Course</button>
       </div>
     </form>
 
@@ -20,9 +21,9 @@
     <h2>Assign Teacher to Course</h2>
 
     <form @submit.prevent="assignTeacher">
-      <div>
-        <label for="teacherId">Select Teacher:</label>
-        <select v-model="teacherId" required>
+      <div class="mb-3">
+        <label for="teacherId" class="form-label">Select Teacher:</label>
+        <select class="form-select" v-model="teacherId" required>
           <option value="" disabled>Select Teacher</option>
           <option v-for="teacher in teachers" :key="teacher.teacher_id" :value="teacher.teacher_id">
             {{ teacher.username }}
@@ -30,9 +31,9 @@
         </select>
       </div>
 
-      <div>
-        <label for="courseId">Select Course:</label>
-        <select v-model="courseId" required>
+      <div class="mb-3">
+        <label for="courseId" class="form-label">Select Course:</label>
+        <select class="form-select" v-model="courseId" required>
           <option value="" disabled>Select Course</option>
           <option v-for="course in courses" :key="course.course_id" :value="course.course_id">
             {{ course.course_name }}
@@ -40,8 +41,8 @@
         </select>
       </div>
 
-      <div>
-        <button type="submit">Assign Teacher</button>
+      <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Assign Teacher</button>
       </div>
     </form>
 
@@ -49,9 +50,9 @@
     <h2>Assign Student to Course</h2>
 
     <form @submit.prevent="assignStudent">
-      <div>
-        <label for="studentId">Select Student:</label>
-        <select v-model="studentId" required>
+      <div class="mb-3">
+        <label for="studentId" class="form-label">Select Student:</label>
+        <select class="form-select" v-model="studentId" required>
           <option value="" disabled>Select Student</option>
           <option v-for="student in students" :key="student.student_id" :value="student.student_id">
             {{ student.username }}
@@ -59,9 +60,9 @@
         </select>
       </div>
 
-      <div>
-        <label for="courseId">Select Course:</label>
-        <select v-model="courseId" required>
+      <div class="mb-3">
+        <label for="courseId" class="form-label">Select Course:</label>
+        <select class="form-select" v-model="courseId" required>
           <option value="" disabled>Select Course</option>
           <option v-for="course in courses" :key="course.course_id" :value="course.course_id">
             {{ course.course_name }}
@@ -69,8 +70,8 @@
         </select>
       </div>
 
-      <div>
-        <button type="submit">Assign Student</button>
+      <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Assign Student</button>
       </div>
     </form>
   </div>
@@ -180,5 +181,64 @@ export default {
 </script>
 
 <style scoped>
-/* Add your component styles here */
+  /* Add your component-specific styles here */
+  form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  h2 {
+    color: #3498db;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    color: #555;
+  }
+
+  input,
+  select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border-color 0.3s ease-in-out;
+  }
+
+  input:focus,
+  select:focus {
+    border-color: #3498db;
+    outline: none;
+  }
+
+  button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #3498db;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+
+  button:hover {
+    background-color: #2980b9;
+  }
+
+  .mb-3 {
+    margin-bottom: 20px;
+  }
 </style>
